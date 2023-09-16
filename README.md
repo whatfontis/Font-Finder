@@ -1,12 +1,5 @@
-# Font-Finder
-Font Finder - What Font Is Api Example
+# Swift Example for WhatTheFontis API 
 
-https://www.WhatFontIs.com
+This Branch contains a Sample App for whatTheFontis API, Note that this App is Complete, First you will need to get an API Key from WhatFontis Website then you will need to figure out a way to host a JSON file on the Web and that's pretty much it.
 
-Find any font from any image (commercial or free)
-
-Using a catalogue of 500k+ fonts (commercial or free) and font finder AI, for every image uploaded we show over 60 similar fonts ( free or commercial).
-
-More info here:
-
-https://www.whatfontis.com/API-identify-fonts-from-image.html
+Get you API key from Here: https://whatfontis.com/api
