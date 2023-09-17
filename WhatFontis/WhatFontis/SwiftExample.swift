@@ -40,7 +40,7 @@ class SearchService: NetworkMonitor {
 	
 	func searchFont(search: String) async throws -> [resultOfSearch] {
 		
-		guard !NetworkMonitor().isConnected else { throw myError.noInternet }
+		guard !isConnected else { throw myError.noInternet }
 		
 		guard search != "" else { throw myError.searchIsNill }
 		
