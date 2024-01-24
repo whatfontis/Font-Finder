@@ -17,34 +17,11 @@ $json_example=<<<END
 {
    "FONT": {
       "API_KEY": "XXXXXXXX",
+      "BASE64": 0,
+      "NOTTEXTBOXSDETECTION": 0,
       "INFO": {
-         "TITLE": "ABRIL FATFACE",
-         "letters": [
-            {
-               "letter": "A",
-               "url": "https://www.whatfontis.com/api/img/A.png"
-            },
-            {
-               "letter": "B",
-               "url": "https://www.whatfontis.com/api/img/B.png"
-            },
-            {
-               "letter": "C",
-               "url": "https://www.whatfontis.com/api/img/C.png"
-            },
-            {
-               "letter": "D",
-               "url": "https://www.whatfontis.com/api/img/D.png"
-            },
-            {
-               "letter": "E",
-               "url": "https://www.whatfontis.com/api/img/E.png"
-            },
-            {
-               "letter": "F",
-               "url": "https://www.whatfontis.com/api/img/F.png"
-            }
-         ]
+         "urlimage": "https://d1ly52g9wjvbd2.cloudfront.net/img16/A/D/ADBE_Lobster-RegularA.png",
+         "urlimagebase64": ""
       }
    }
 }
