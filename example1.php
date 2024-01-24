@@ -27,7 +27,7 @@ $json_example=<<<END
 }
 END;
 
-$file_to_send_toserver='https://www.whatfontis.com/api/?base64=1&file='.base64_encode($json_example);
+$file_to_send_toserver='https://www.whatfontis.com/api2/?base64=1&file='.base64_encode($json_example);
 
 $read_fonts_json = file_get_contents($file_to_send_toserver);
 
