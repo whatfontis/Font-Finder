@@ -13,7 +13,7 @@ https://www.whatfontis.com/API-identify-fonts-from-image.html
 Please modify XXXXXXXX from API_KEY with your API key.
 */
 
-$file=file_get_contents('img/A.png');
+$file=file_get_contents('A.png');
 
 $encdeod= base64_encode($file);
  
