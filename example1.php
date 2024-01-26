@@ -16,7 +16,7 @@ Please modify XXXXXXXX from API_KEY with your API key.
 $json_example=<<<END
 {
    "FONT": {
-      "API_KEY": "4e4ab51e5ef04a4765aa87ed2ca7ddf0351fa9aa5a04ca897468c5c8f3fe650e",
+      "API_KEY": "XXXXXXXX",
       "BASE64": 1,
       "NOTTEXTBOXSDETECTION": 0,
       "INFO": {
