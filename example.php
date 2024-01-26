@@ -13,24 +13,45 @@ https://www.whatfontis.com/API-identify-fonts-from-image.html
 Please modify XXXXXXXX from API_KEY with your API key.
 */
 
-$json_example=<<<END
-{
-   "FONT": {
-      "API_KEY": "XXXXXXXX",
-      "BASE64": 0,
-      "NOTTEXTBOXSDETECTION": 0,
-      "INFO": {
-         "urlimage": "https://d1ly52g9wjvbd2.cloudfront.net/img16/A/D/ADBE_Lobster-RegularA.png",
-         "urlimagebase64": ""
-      }
-   }
+$file=file_get_contents('A.png');
+
+$encdeod= base64_encode($file);
+ 
+
+
+
+$curl = curl_init();
+
+
+$data = array(
+    'API_KEY' => 'XXXXXXXX',
+    'IMAGEBASE64' => '1',
+    'NOTTEXTBOXSDETECTION' => '0',
+    'urlimage' => '',
+    'urlimagebase64' => $encdeod,
+    'limit' => '20'
+);
+
+
+curl_setopt($curl, CURLOPT_URL, 'https://www.whatfontis.com/api2/');
+curl_setopt($curl, CURLOPT_POST, true);
+curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+// Execută cererea și capturează răspunsul
+$read_fonts_json = curl_exec($curl);
+
+
+if(curl_errno($curl)){
+    echo 'Curl error: ' . curl_error($curl);
 }
-END;
 
-$file_to_send_toserver='https://www.whatfontis.com/api2/?base64=1&file='.base64_encode($json_example);
 
-$read_fonts_json = file_get_contents($file_to_send_toserver);
+curl_close($curl);
 
 $read_fonts=json_decode($read_fonts_json);
 
 print_r($read_fonts);
+
+
+?>
