@@ -22,6 +22,8 @@ from Google Fonts, and 200+ from dafont.com.
 | `anospace.zip` | `imagenospace/` — 624 JPGs, normal letter spacing |
 | `awithspace.zip` | `image/` — the same 624 fonts, letters spaced apart |
 | `info.txt` | ground truth: `filename\|font name`, 624 lines (also inside each zip) |
+| `test_images.php` | runs the whole set through the API and scores it |
+| `example.php` | one image, one call — the API's response shape |
 
 Both zips cover the same 624 fonts; only the letter spacing differs. The spaced version is
 easier to segment into individual characters, which is the first step of our pipeline —
@@ -38,11 +40,25 @@ Abel.jpg|Abel
 
 ## Reproducing our numbers
 
-`example.php` sends one image to the API and prints the matches, best first. Point it at
-each image in a zip, compare the returned names against `info.txt`, and count how often the
-correct name appears in the first N results.
+```bash
+unzip anospace.zip          # or awithspace.zip
+# put your API key in test_images.php
+php test_images.php imagenospace
+```
 
-Grading is exact-name: "Montserrat" counts, "a geometric sans similar to Montserrat" does not.
+`test_images.php` sends every image to the API, compares the answers against `info.txt`,
+and prints Top-1/5/10/20 plus a per-image `results.csv`. Budget ~30 minutes for 624 images.
+(`example.php` is just a single call, if all you want is to see the API's response shape.)
+
+**How a hit is counted.** `info.txt` holds family names, the catalogue holds the full name
+of each cut — so `Alfa Slab` is matched by `Alfa Slab One`, `Abramo` by `Abramo Script`,
+`Akzidenz-Grotesk` by `Akzidenz Grotesk Pro Ext Med Italic`. A returned name counts if it
+is the expected name or starts with it. Hyphens count as spaces. Score exact-string instead
+and you will get ~15% instead of ~80% — the API is right in those cases, the ground truth
+is simply written shorter.
+
+An API or network failure is dropped from the denominator; a font we just failed to return
+counts as a miss. That is why the counts below are out of 622, not 624.
 
 What WhatFontIs scored on these 624 images, best configuration, `limit=20`:
 
