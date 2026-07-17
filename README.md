@@ -3,7 +3,7 @@
 Font Finder — [WhatFontIs.com](https://www.WhatFontIs.com) API example, and the 624-font
 test set behind our font-identification benchmark.
 
-Find any font from any image (commercial or free). Using a catalogue of 990K+ fonts
+Find any font from any image (commercial or free). Using a catalogue of 1.2M+ fonts
 (commercial or free) and font finder AI, for every image uploaded we show over 60 similar
 fonts (free or commercial).
 
