@@ -23,6 +23,7 @@ from Google Fonts, and 200+ from dafont.com.
 | `awithspace.zip` | `image/` — the same 624 fonts, letters spaced apart |
 | `info.txt` | ground truth: `filename\|font name`, 624 lines (also inside each zip) |
 | `test_images.php` | runs the whole set through the API and scores it |
+| `match_helpers.php` | the name matcher it scores with — see below |
 | `example.php` | one image, one call — the API's response shape |
 
 Both zips cover the same 624 fonts; only the letter spacing differs. The spaced version is
@@ -50,12 +51,21 @@ php test_images.php imagenospace
 and prints Top-1/5/10/20 plus a per-image `results.csv`. Budget ~30 minutes for 624 images.
 (`example.php` is just a single call, if all you want is to see the API's response shape.)
 
-**How a hit is counted.** `info.txt` holds family names, the catalogue holds the full name
-of each cut — so `Alfa Slab` is matched by `Alfa Slab One`, `Abramo` by `Abramo Script`,
-`Akzidenz-Grotesk` by `Akzidenz Grotesk Pro Ext Med Italic`. A returned name counts if it
-is the expected name or starts with it. Hyphens count as spaces. Score exact-string instead
-and you will get ~15% instead of ~80% — the API is right in those cases, the ground truth
-is simply written shorter.
+**How a hit is counted** — `match_helpers.php`, the same matcher we score our own runs
+with, so your numbers are comparable to ours. It is not a string comparison, and that is
+the whole ballgame: `info.txt` holds the family name while the catalogue holds the full
+name of each cut.
+
+| info.txt says | the API answers (all correct) |
+|---|---|
+| `Alfa Slab` | `Alfa Slab One` |
+| `Abramo` | `Abramo Script` |
+| `Akzidenz-Grotesk` | `Berthold Akzidenz-Grotesk Medium Extended Italic` |
+
+So it drops weight/style words, splits CamelCase, and matches on the tokens that actually
+name the typeface — in the title and in the URL slug. Compare the same API answers as
+exact strings and you score **20%**; score them properly and you get **70%**. If you write
+your own loop, this is the part to get right.
 
 An API or network failure is dropped from the denominator; a font we just failed to return
 counts as a miss. That is why the counts below are out of 622, not 624.

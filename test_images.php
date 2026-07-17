@@ -49,22 +49,10 @@ foreach (file($infoPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line
 }
 if (!$truth) { fwrite(STDERR, "info.txt has no usable lines.\n"); exit(1); }
 
-// info.txt holds FAMILY names ("Alfa Slab", "Abramo"); the catalogue holds the full
-// name of each cut ("Alfa Slab One", "Abramo Script", "Akzidenz Grotesk Pro Ext Med
-// Italic"). So a hit is: same name, or the returned name is a member of the expected
-// family — it starts with the family name followed by a space. The trailing space
-// matters, or "Abel" would also match "Abelina".
-// Hyphens and underscores are treated as spaces ("Akzidenz-Grotesk" = "Akzidenz Grotesk").
-function norm($s) {
-    $s = mb_strtolower(trim((string)$s));
-    $s = str_replace(['-', '_'], ' ', $s);
-    return preg_replace('/\s+/', ' ', $s);
-}
-function isHit($returned, $expected) {
-    $r = norm($returned);
-    $e = norm($expected);
-    return $r === $e || strpos($r, $e . ' ') === 0;
-}
+// Scoring uses the same matcher we score our own runs with — see match_helpers.php.
+// It is token-based, not a string compare, and that is the whole ballgame: the same
+// API answers score ~20% as exact strings and ~70% scored properly.
+require_once __DIR__ . '/match_helpers.php';
 
 function identify($path, $API_KEY, $LIMIT) {
     $curl = curl_init();
@@ -97,11 +85,14 @@ function identify($path, $API_KEY, $LIMIT) {
     if (!is_array($list) || (isset($list['error']))) {
         return ['error' => is_array($list) ? json_encode($list) : 'unexpected shape', 'ms' => $ms];
     }
-    $names = [];
+    // keep title AND url — findPosition() tokenises the url slug too
+    $out = [];
     foreach ($list as $row) {
-        if (is_array($row) && isset($row['title'])) $names[] = (string)$row['title'];
+        if (is_array($row) && isset($row['title'])) {
+            $out[] = ['title' => (string)$row['title'], 'url' => (string)($row['url'] ?? '')];
+        }
     }
-    return ['names' => $names, 'ms' => $ms];
+    return ['results' => $out, 'ms' => $ms];
 }
 
 // ── run ─────────────────────────────────────────────────────────────────────
@@ -131,10 +122,8 @@ foreach ($files as $path) {
         continue;
     }
 
-    $rank = 0;
-    foreach ($r['names'] as $i => $name) {
-        if (isHit($name, $want)) { $rank = $i + 1; break; }
-    }
+    $found = findPosition($want, $r['results']);
+    $rank  = ($found['pos'] > 0) ? $found['pos'] : 0;
     if ($rank === 0) $notfound++;
     $row = [$base, $truth[$base], $rank ?: 'not found', $r['ms']];
     foreach ($DEPTHS as $d) {
